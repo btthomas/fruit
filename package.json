@@ -1,0 +1,35 @@
+{
+  "name": "fruit",
+  "version": "0.0.1",
+  "description": "fruit",
+  "dependencies": {
+    "express": "^4.13.3",
+    "jade": "^1.11.0",
+    "await": "^0.2.5",
+    "d3": "^3.5.8",
+    "lodash": "^3.0.0",
+    "request": "^2.72.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.8.0"
+  },
+  "scripts": {
+    "start": "nodemon app.js",
+    "lint": "jshint ."
+  },
+  "jshintConfig": {
+    "node": true,
+    "esnext": true,
+    "globals": {
+      "d3": false,
+      "FileReader": false,
+      "_": false,
+      "window": false
+    }
+  },
+  "engines": {
+    "node": "^4.x",
+    "npm": "^3.x"
+  },
+  "author": "Blake Thomas"
+}
