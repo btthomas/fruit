@@ -67,6 +67,8 @@ function displayByCity() {
       .append('th')
       .html(function(field) {return field.name;});  
   
+  sortByCityAndId();
+  
   const $trEnter = $table.append('tbody').selectAll('tr.datum')
     .data(fruitApp.data).enter()
     .append('tr');
@@ -91,6 +93,32 @@ function displayByCity() {
   
 }
 
+function sortById() {
+  fruitApp.data = fruitApp.data.sort(function (a, b) {
+    const aInt = +a.farmer_id;
+    const bInt = +b.farmer_id;
+    
+    return (aInt - bInt);
+  });
+}
+
+function sortByCityAndId() {
+  fruitApp.data = fruitApp.data.sort(function (a, b) {
+    const aLowerCase = a.location_1.human_address.city.toLowerCase();
+    const bLowerCase = b.location_1.human_address.city.toLowerCase();
+
+    if(aLowerCase < bLowerCase) {
+      return -1;
+    } else if(aLowerCase > bLowerCase) {
+      return 1;
+    }
+    //equal now check id
+    const aInt = +a.farmer_id;
+    const bInt = +b.farmer_id;
+    
+    return (aInt - bInt);
+  });
+}
 function getHeaders() {
   
   return [
