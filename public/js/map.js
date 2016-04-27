@@ -1,6 +1,6 @@
 'use strict';
 
-fruitApp.aspectRatio = 6;
+fruitApp.aspectRatio = 4;
 
 function makeMap() {
   
@@ -16,8 +16,8 @@ function makeMap() {
     .attr('id', 'farms');
     
   let projection = d3.geo.albersUsa()
-		.scale(4 * g.attr('width'))
-		.translate([-g.attr('width')/ 1.1, g.attr('height') / 0.4]);
+		.scale(5 * g.attr('width'))
+		.translate([-g.attr('width')/ 0.9, g.attr('height') / 0.45]);
 
 	const path = d3.geo.path()
 		.projection(projection);
@@ -56,10 +56,13 @@ function drawFarms() {
       })
       .attr('r', 2)
       .attr('class', 'farm')
-      .on('mouseover', logFarm);
+      .on('click', filterCity);
       
 }
 
-function logFarm(d) {
-  console.log(d);
+function filterCity(d) {
+
+  filterAllFarms(d);
+  
+  updateTable();
 }

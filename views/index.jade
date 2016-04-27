@@ -10,7 +10,13 @@ html(lang="en")
       .row
         .col-md-12#top
           h2= 'FRUIT'
-        .col-md-12#map
+        .col-md-8#map
+        .col-md-4#menu
+          span= 'Select Fruit:'
+          select#fruitSelect.form-control
+            option= 'All'
+          br
+          button#unFilter.btn.btn-block= 'Undo City Filter'
         .col-md-12#sheet
           h4#loading= 'please wait...'
           table#table.table.table-bordered.table-condensed.table-striped
@@ -21,6 +27,7 @@ html(lang="en")
       script(src='http://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.1.0/lodash.min.js')
       script(src='js/saveSvgAsPng.js')
       script(src='js/script.js')
+      script(src='js/ui.js')
       script(src='js/table.js')
       script(src='js/map.js')
             

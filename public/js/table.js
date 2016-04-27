@@ -17,10 +17,13 @@ function displayByCity() {
   
   sortByCityAndId();
   
-  const $trEnter = $table.append('tbody').selectAll('tr.datum')
-    .data(fruitApp.data).enter()
-    .append('tr');
-  
+  const $trEnter = $table.append('tbody').attr('id', 'tbody')
+    .selectAll('tr.datum')
+      .data(fruitApp.data, dataKey)
+      .enter()
+        .append('tr')
+        .attr('class', 'datum');
+      
   headers.forEach(function(field) {
     
     $trEnter.append('td')
@@ -41,8 +44,45 @@ function displayByCity() {
   
 }
 
+function dataKey(d) {
+  return _.toArray(d).join('-');
+}
+
+function updateTable() {
+
+  sortById();
+  
+  const $trData = d3.select('tbody').selectAll('tr.datum')
+    .data(fruitApp.filteredData, dataKey);
+
+  $trData.exit().remove();
+  
+  const $trEnter = $trData.enter()
+    .append('tr')
+    .attr('class', 'datum');
+  
+  getHeaders().forEach(function(field) {
+    
+    $trEnter.append('td')
+      .html(function(d) {
+        if(typeof field.path === 'string') {
+          
+          return d[field.path]
+        } else {
+          let out = d;
+          //loop through array
+          field.path.forEach(function(path) {
+            out = out[path];
+          });
+          return out;
+        }
+      });    
+  }) 
+  
+}
+
 function sortById() {
-  fruitApp.data = fruitApp.data.sort(function (a, b) {
+  fruitApp.filteredData = fruitApp.filteredData.sort(function (a, b) {
     const aInt = +a.farmer_id;
     const bInt = +b.farmer_id;
     

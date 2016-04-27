@@ -16,6 +16,8 @@ window.onload = function() {
       cleanTheData(data);
     }
   });
+  
+  attachListeners();
 }
 
 function getDataFromApi(callback) {
