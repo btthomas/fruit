@@ -15,7 +15,7 @@ function displayByCity() {
       .append('th')
       .html(function(field) {return field.name;});  
   
-  sortByCityAndId();
+  // sortByCityAndId();
   
   const $trEnter = $table.append('tbody').attr('id', 'tbody')
     .selectAll('tr.datum')
@@ -41,7 +41,7 @@ function displayByCity() {
         }
       });    
   }) 
-  
+  $trEnter.sort(byCity);
 }
 
 function dataKey(d) {
@@ -78,7 +78,24 @@ function updateTable() {
         }
       });    
   }) 
+  $trData.sort(byCity);
+}
+
+function byCity(a, b) {
   
+  const aLowerCase = a.location_1.human_address.city.toLowerCase();
+  const bLowerCase = b.location_1.human_address.city.toLowerCase();
+
+  if(aLowerCase < bLowerCase) {
+    return -1;
+  } else if(aLowerCase > bLowerCase) {
+    return 1;
+  }
+  //equal now check id
+  const aInt = +a.farmer_id;
+  const bInt = +b.farmer_id;
+    
+  return (aInt - bInt);
 }
 
 function sortById() {

@@ -16,8 +16,8 @@ function makeMap() {
     .attr('id', 'farms');
     
   let projection = d3.geo.albersUsa()
-		.scale(5 * g.attr('width'))
-		.translate([-g.attr('width')/ 0.9, g.attr('height') / 0.45]);
+		.scale(9 * g.attr('width'))
+		.translate([-g.attr('width')/ 0.4, g.attr('height') / 0.28]);
 
 	const path = d3.geo.path()
 		.projection(projection);
