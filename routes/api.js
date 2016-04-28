@@ -3,9 +3,8 @@
 
 const express = require('express');
 const router = express.Router();
-const await = require('await');
-const fs = require('fs');
 const request = require('request');
+// const fs = require('fs');
 
 router.get('/data', function(req, res){
 	console.error('route: /api/data, ip: %s, time: %s', req.ip, new Date().toTimeString().substr(0,9));
@@ -18,10 +17,23 @@ router.get('/data', function(req, res){
       res.json(error);
     } else {
       res.json(JSON.parse(html));
+      
+      //save this to the disk
+      // save(html);
     }
   });
 });
 
+function save(longString) {
+  
+  fs.writeFile('data.json', longString, function(err) {
+    if(err) {
+      console.log('err');
+    } else {
+      console.log('success');
+    }
+  });
+}
 
 module.exports = router;
 })();

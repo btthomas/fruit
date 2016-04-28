@@ -28,7 +28,7 @@ function getDataFromApi(callback) {
     callback(null, xmlHttp.responseText);
   }
   
-  xmlHttp.open("GET", '/api/data', true);
+  xmlHttp.open("GET", 'data.json', true);
   xmlHttp.send(null);
 }
 

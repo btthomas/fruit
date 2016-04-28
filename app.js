@@ -2,8 +2,6 @@
 
 const express = require('express');
 const app = express();
-const await = require('await');
-const fs = require('fs');
 
 const port = process.env.PORT || process.argv[2] || 3000;
 
