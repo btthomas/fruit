@@ -21,24 +21,49 @@ const Table = React.createClass({
     this.serverRequest.abort();
   },
   
+  doSort: function(name) {
+    const head = this.state.headers.find(function(h) {return h.name === name});
+    const getter = head.get;
+    
+    // this will allow a stable sort
+    this.state.data.forEach(function(d, i) {d.order = i;});
+
+    this.setState({
+      data: this.state.data.sort(function(a, b) {
+        let diff;
+        if(head.cast) {
+          diff = +getter(a) - +getter(b);
+        } else {
+          diff = getter(a).toLowerCase().localeCompare(getter(b).toLowerCase());
+        }
+        if(diff === 0) {
+          return a.order - b.order;
+        } else {
+          return diff;
+        }
+      })
+    });
+  },
+  
   render: function() {
     return (
       <table className="table table-bordered table-condensed table-striped" id="table">
-        <THead headers={this.state.headers}/>
+        <THeads headers={this.state.headers} handleSort={this.doSort} />
         <TBody headers={this.state.headers} data={this.state.data}/>
       </table>
     );
   }
 });
 
-const THead = React.createClass({
+const THeads = React.createClass({
+  
   render: function() {
     
     let heads = this.props.headers.map(function(field) {
       return (
-        <th key={field.name}> {field.name} </th>
+        <THead key={field.name} name={field.name} handleSort={this.props.handleSort} />
       );
-    });
+    }, this);
     
     return (
       <thead>
@@ -46,6 +71,23 @@ const THead = React.createClass({
           {heads}
         </tr>
       </thead>
+    );
+  }
+});
+
+const THead = React.createClass({
+  handleSort: function(e) {
+    this.props.handleSort(this.props.name);
+  },
+  
+  render: function() {
+    return (
+      <th> 
+        {this.props.name}
+        <span className="pull-right">
+          <button className="btn btn-xs" onClick={this.handleSort}> sort </button>
+        </span>
+      </th>
     );
   }
 });
@@ -105,7 +147,7 @@ function getJson(url, callback) {
         //add key
         d.num = i;
       });
-    
+      
       callback({
         headers: getHeaders(),
         data: data
@@ -131,31 +173,38 @@ function getHeaders() {
   return [
     {
       name: 'Farm Name',
-      get: function(d) {return d.farm_name}
+      get: function(d) {return d.farm_name},
+      cast: false
     },
     {
       name: 'Farmer ID',
-      get: function(d) {return d.farmer_id}
+      get: function(d) {return d.farmer_id},
+      cast: true
     },
     {
       name: 'Item',
-      get: function(d) {return d.item}
+      get: function(d) {return d.item},
+      cast: false
     },
     {
       name: 'City',
-      get: function(d) {return d.location_1.human_address.city}
+      get: function(d) {return d.location_1.human_address.city},
+      cast: false
     },
     {
       name: 'State',
-      get: function(d) {return d.location_1.human_address.state}
+      get: function(d) {return d.location_1.human_address.state},
+      cast: false
     },
     {
       name: 'Zipcode',
-      get: function(d) {return d.location_1.human_address.zip}
+      get: function(d) {return d.location_1.human_address.zip},
+      cast: true
     },
     {
       name: 'Phone #',
-      get: function(d) {return d.phone1}
+      get: function(d) {return d.phone1},
+      cast: false
     },
   ];
 }
