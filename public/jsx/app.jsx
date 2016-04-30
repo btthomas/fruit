@@ -1,5 +1,6 @@
 
-const Table = React.createClass({
+const Page = React.createClass({
+  
   getInitialState: function() {
     return {
       headers: [],
@@ -47,10 +48,63 @@ const Table = React.createClass({
   
   render: function() {
     return (
-      <table className="table table-bordered table-condensed table-striped" id="table">
-        <THeads headers={this.state.headers} handleSort={this.doSort} />
-        <TBody headers={this.state.headers} data={this.state.data}/>
-      </table>
+      <div>
+        <Title />
+        <Menu />
+        <Table data={this.state.data} headers={this.state.headers} handleSort={this.doSort}/>
+      </div>
+    );
+  }
+});
+
+const Title = React.createClass({
+  render: function() {
+    return (
+      <div id="top" className="col-md-3 text-center">
+        <h2>FRUIT</h2>
+      </div>
+    );
+  }
+});
+
+const Menu = React.createClass({
+  getInitialState: function() {
+    return {
+      fruits: ['ALL']
+    };
+  },
+  
+  render: function() {
+
+    let options = this.state.fruits.map(function(f, i) {
+      return (
+        <option key={i}> {f} </option>
+      );
+    });
+    
+    return (
+      <div id="menu" className="col-md-3 form-group">
+        <label for="fruitSelect" className="control-label">
+          select a fruit
+        </label>
+        <select id="fruitSelect" className="form-control">
+          {options}
+        </select>
+      </div>
+    );
+  }
+});
+
+const Table = React.createClass({
+
+  render: function() {
+    return (
+      <div id="sheet" className="col-md-12">
+        <table className="table table-bordered table-condensed table-striped" id="table">
+          <THeads headers={this.props.headers} handleSort={this.props.handleSort} />
+          <TBody headers={this.props.headers} data={this.props.data}/>
+        </table>
+      </div>
     );
   }
 });
@@ -210,6 +264,6 @@ function getHeaders() {
 }
   
 ReactDOM.render(
-  <Table source="data.json" />,
-  document.getElementById('sheet')
+  <Page source="data.json" />,
+  document.getElementById('react-root')
 );
