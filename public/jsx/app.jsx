@@ -4,7 +4,10 @@ const Page = React.createClass({
   getInitialState: function() {
     return {
       headers: [],
-      data: []
+      data: [],
+      allData: [],
+      fruits: ['ALL'],
+      selected: 'ALL'
     };
   },
   
@@ -13,7 +16,9 @@ const Page = React.createClass({
       
       this.setState({
         headers: result.headers,
-        data: result.data
+        data: result.data,
+        allData: result.data,
+        fruits: calcUniqFruits(result.data)
       });
     }.bind(this));
   },
@@ -46,12 +51,20 @@ const Page = React.createClass({
     });
   },
   
+  filterFruits: function(fruit) {
+        
+    // filter by fruit  
+    this.setState({
+      selected: fruit
+    });
+  },
+  
   render: function() {
     return (
       <div>
         <Title />
-        <Menu />
-        <Table data={this.state.data} headers={this.state.headers} handleSort={this.doSort}/>
+        <Menu fruits={this.state.fruits} selected={this.state.selected} filterFruits={this.filterFruits}/>
+        <Table data={this.state.data} headers={this.state.headers} handleSort={this.doSort} selected={this.state.selected}/>
       </div>
     );
   }
@@ -68,26 +81,33 @@ const Title = React.createClass({
 });
 
 const Menu = React.createClass({
-  getInitialState: function() {
-    return {
-      fruits: ['ALL']
-    };
+  
+  handleChange: function(e) {
+    e.preventDefault();
+    
+    const val = e.target.value;
+    this.props.filterFruits(val);
   },
   
   render: function() {
 
-    let options = this.state.fruits.map(function(f, i) {
+    let options = this.props.fruits.map(function(f, i) {
       return (
-        <option key={i}> {f} </option>
+        <option key={i} value={f}> {f} </option>
       );
     });
     
     return (
       <div id="menu" className="col-md-3 form-group">
-        <label for="fruitSelect" className="control-label">
+        <label htmlFor="fruitSelect" className="control-label">
           select a fruit
         </label>
-        <select id="fruitSelect" className="form-control">
+        <select 
+          id="fruitSelect" 
+          className="form-control"
+          value={this.props.selected}
+          onChange={this.handleChange}
+        >
           {options}
         </select>
       </div>
@@ -102,7 +122,7 @@ const Table = React.createClass({
       <div id="sheet" className="col-md-12">
         <table className="table table-bordered table-condensed table-striped" id="table">
           <THeads headers={this.props.headers} handleSort={this.props.handleSort} />
-          <TBody headers={this.props.headers} data={this.props.data}/>
+          <TBody headers={this.props.headers} data={this.props.data} selected={this.props.selected}/>
         </table>
       </div>
     );
@@ -148,14 +168,21 @@ const THead = React.createClass({
 
 const TBody = React.createClass({
 
-  render: function() {
-    
-    let rows = this.props.data.map(function(d) {
-      return (
-        <TRow key={d.num} data={d} headers={this.props.headers}/>
-      );
-    }, this);
-        
+  render: function() {    
+    //apply filter here!
+    let rows = this.props.data.reduce((result, d) => {
+      if(
+        this.props.selected === 'ALL' ||
+        _.capitalize(d.item) === this.props.selected
+      ) {
+        return result.concat(
+          <TRow key={d.num} data={d} headers={this.props.headers}/>
+        );
+      } else {
+        return result;
+      }
+    }, []);
+
     return (
       <tbody>
         {rows}
@@ -261,6 +288,17 @@ function getHeaders() {
       cast: false
     },
   ];
+}
+  
+function calcUniqFruits(data) {
+  
+  return ['ALL'].concat(
+    _(data)
+      .map(function(d) {return _.capitalize(d.item);})
+      .uniq()
+      .sort()
+      .value()
+  );
 }
   
 ReactDOM.render(
