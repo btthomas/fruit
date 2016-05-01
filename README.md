@@ -10,4 +10,4 @@ will install the dependecies
 `npm start`
 will spin up a node server on port 3000
 
-Or just go [click here](fruit-fruit.herokuapp.com)
+Or just go [click here](http://fruit-fruit.herokuapp.com)
