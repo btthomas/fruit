@@ -4,8 +4,8 @@ function attachListeners() {
   d3.select('button#unFilter')
     .on('click', unfilter);
   
-  d3.select('select#fruitSelect')
-    .on('change', doSelect);
+  // d3.select('select#fruitSelect')
+    // .on('change', doSelect);
 }
 
 function filterAllFarms(matcher) {
@@ -19,7 +19,7 @@ function filterAllFarms(matcher) {
 
 function filterAllFarmsFruit(fruit) {
   
-  //filter on city
+  //filter on fruit
   fruitApp.filteredData = _.filter(fruitApp.data, function(d) {
     return fruit === d.item;
   })
